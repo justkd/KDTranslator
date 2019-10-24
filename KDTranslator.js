@@ -15,10 +15,10 @@ class KDTranslator {
      * @property {string} outputText
      */
 
-     /**
-      * Uses ISO 639-1 language codes.
-      * @param {KDTranslatorOptions} options 
-      */
+    /**
+     * Uses ISO 639-1 language codes.
+     * @param {KDTranslatorOptions} options 
+     */
     constructor(options) {
 
         const _translations = []
@@ -33,7 +33,7 @@ class KDTranslator {
          * @returns {(string|boolean)} Language code or `false`.
          */
         this.checkLanguageCode = target => {
-            if (target && typeof target === 'String') {
+            if (target && typeof target === 'string') {
                 target = target.toLowerCase()
                 if (KDTranslator.languageCodes[target]) return target // return if the param is a valid language code
                 const keys = Object.keys(KDTranslator.languageCodes).filter(key => {
@@ -64,12 +64,16 @@ class KDTranslator {
 
         /**
          * Set the input and/or output languages via a `KDTranslatorOptions` object.
-         * @param {KDTranslatorOptions} options
+         * @param {(KDTranslatorOptions|string)} options - Accepts either the output language string alone or a `KDTranslatorOptions` object.
          */
         this.setOptions = options => {
             if (options) {
-                if (options.inputLanguage) this.setInputLanguage(options.inputLanguage)
-                if (options.outputLanguage) this.setOutputLanguage(options.outputLanguage)
+                if (typeof options === 'object') {
+                    if (options.inputLanguage) this.setInputLanguage(options.inputLanguage)
+                    if (options.outputLanguage) this.setOutputLanguage(options.outputLanguage)
+                } else if (typeof options === 'string') {
+                    this.setOutputLanguage(options)
+                }
             }
             this.options()
         }
@@ -111,6 +115,8 @@ class KDTranslator {
                                 if (element[0]) translation += element[0]
                             })
 
+                            translation = translation.replace(/\s+/g, ' ').trim() // strip extra spaces
+
                             const response = {
                                 inputLanguage: _options.inputLanguage,
                                 outputLanguage: _options.outputLanguage,
@@ -139,7 +145,7 @@ class KDTranslator {
         // END this.translate()
 
         const init = (_ => {
-            if (options) this.options(options)
+            if (options) this.setOptions(options)
         })()
 
     }
