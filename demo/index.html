@@ -1,0 +1,101 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>KDTranslator Example</title>
+    <meta name="description" content="">
+    <meta name="author" content="justKD">
+    <style type="text/css" media="screen">
+        @import url('https://fonts.googleapis.com/css?family=Lato');
+
+        #editor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            border-bottom: 5px;
+        }
+
+        #print {
+            font-family: 'Lato', Arial, Helvetica, sans-serif;
+            position: absolute;
+            top: 50%;
+            width: 50%;
+            height: 50%;
+        }
+
+        #select {
+            font-family: 'Lato', Arial, Helvetica, sans-serif;
+            font-size: 1em;
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="editor">
+        Type here and hit enter to translate.
+        This demo automtically detects your source language.
+        Choose target language using the menu at the bottom.
+    </div>
+
+    <div id="print"></div>
+
+    <select id="select"></select>
+
+    <!-- ace.js code editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js" type="text/javascript" charset="utf-8"></script>
+    <!-- KDTranslator -->
+    <script src="simple_translation.js"></script>
+
+    <script>
+        // Create a new translator
+        const translator = new KDTranslator()
+
+        // This is an editor window
+        const editor = ace.edit("editor");
+        editor.commands.addCommand({
+            name: "...",
+            exec: _ => {
+                // when text is input, use the translator to translate the text and display the translation, console.log all past translations
+                translator.translate(editor.getValue(), _ => {
+                    const translation = translator.latest().outputText
+                    document.getElementById("print").innerHTML = "<br><br><br>" + translation
+                    console.log(translator.translations())
+                })
+            },
+            bindKey: {
+                mac: "return",
+                win: "return"
+            },
+        })
+
+
+        // populate the select dropdown with input languages and set the default selection
+        const setupSelect = (_ => {
+            const select = document.getElementById('select')
+            let html = ''
+
+            Object.keys(KDTranslator.languageCodes).forEach(key => {
+                const option = "<option value='" + key + "'>" + KDTranslator.languageCodes[key] +
+                    "</option>"
+                if (key != 'auto') html += option
+            })
+            select.innerHTML = html
+
+            Object.values(select.options).forEach((option, index) => {
+                if (option.value == 'es') select.selectedIndex = index
+            })
+
+            select.onchange = el => translator.setOutputLanguage(el.target.value)
+        })()
+    </script>
+</body>
+
+</html>
