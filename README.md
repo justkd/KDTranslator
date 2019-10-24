@@ -1,8 +1,8 @@
 # KDTranslator
 
-v 1.0
-Copyright 2019 justKD
-MIT License
+v 1.0  
+Copyright 2019 justKD  
+MIT License  
 
 Vanilla JS helper for managing translation calls to the Google translate public client.
 
