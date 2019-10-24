@@ -12,6 +12,12 @@ via CDN:
 <script src="https://cdn.jsdelivr.net/gh/justKD/KDTranslator@master/KDTranslator.min.js"></script>
 ```
 
+## Try It Out
+https://codepen.io/justKD/pen/YzzVryO
+
+## Example App
+https://justkd.github.io/KDTranslator/demo/index.html
+
 ## Basic Use
 Create a `new KDTranslator` and set the output language (input language defaults to `auto`). The success status of the call can be accessed in the optional callback functions parameter. The callback function will be called on either success or failure, so be sure to check the status.
 ```
@@ -44,9 +50,10 @@ translator.setInputLanguage('german')
 translator.setOutputLanguage('english')
 ```
 
-Current options and translation count can be queried, and the stored translations can be cleared.
+Current options and translation count can be queried, and the stored translations can be cleared. You can also access available language codes for reference.
 ```
 const options = translator.options()
 const count = translator.count()
 translator.clear()
+console.log(KDTranslator.languageCodes)
 ```
